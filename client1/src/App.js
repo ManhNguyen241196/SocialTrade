@@ -1,15 +1,26 @@
-import React from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import React, { useContext } from "react";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+
 import "./App.css";
+import { UserContext, UserProvider } from "./context/UserContext";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
+      element: (
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/login",
@@ -23,9 +34,11 @@ function App() {
 
   return (
     <div className="App">
-      <React.StrictMode>
+      <UserProvider>
+        {/* <React.StrictMode> */}
         <RouterProvider router={router} />
-      </React.StrictMode>
+        {/* </React.StrictMode> */}
+      </UserProvider>
     </div>
   );
 }

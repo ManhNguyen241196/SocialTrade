@@ -1,145 +1,126 @@
 import { Link } from "react-router-dom";
 import "./Register.css";
+import { useState } from "react";
+import axios from "axios";
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [err, setErr] = useState(null);
+  const navigate = useNavigate();
+  const [inputs, setInputs] = useState({
+    name: "",
+    email: "",
+    password: "",
+    comfirm_password: "",
+  });
+
+  const handleChange = (e) => {
+    setInputs((prev) => {
+      return {
+        ...prev,
+        [e.target.name]: e.target.value,
+      };
+    });
+  };
+
+  const handleClick = async (event) => {
+    event.preventDefault();
+    if (inputs.comfirm_password !== inputs.password) {
+      message.error("password confirm chưa chính xác ");
+    } else {
+      try {
+        setIsLoading(true);
+        let res = await axios.post(
+          "http://localhost:8800/api/user/register",
+          inputs
+        );
+        // Work with the response...
+        if (res.data) {
+          setIsLoading(false);
+          message.success("DAng ki thanh cong", 1, () => {
+            setInputs({
+              name: "",
+              email: "",
+              password: "",
+            });
+            navigate("/login");
+          });
+        }
+      } catch (err) {
+        setErr(err);
+        message.error(err.response.data);
+      }
+    }
+  };
   return (
-    <div className="login-root">
-      <div
-        className="box-root flex-flex flex-direction--column"
-        style={{ minHeight: "100vh", flexGrow: 1 }}
-      >
-        <div className="loginbackground box-background--white padding-top--64">
-          <div className="loginbackground-gridContainer">
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "top / start / 8 / end" }}
-            >
-              <div
-                className="box-root"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(white 0%, rgb(247, 250, 252) 33%)",
-                  flexGrow: 1,
-                }}
-              />
-            </div>
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "4 / 2 / auto / 5" }}
-            >
-              <div
-                className="box-root box-divider--light-all-2 animationLeftRight tans3s"
-                style={{ flexGrow: 1 }}
-              />
-            </div>
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "6 / start / auto / 2" }}
-            >
-              <div
-                className="box-root box-background--blue800"
-                style={{ flexGrow: 1 }}
-              />
-            </div>
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "7 / start / auto / 4" }}
-            >
-              <div
-                className="box-root box-background--blue animationLeftRight"
-                style={{ flexGrow: 1 }}
-              />
-            </div>
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "8 / 4 / auto / 6" }}
-            >
-              <div
-                className="box-root box-background--gray100 animationLeftRight tans3s"
-                style={{ flexGrow: 1 }}
-              />
-            </div>
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "2 / 15 / auto / end" }}
-            >
-              <div
-                className="box-root box-background--cyan200 animationRightLeft tans4s"
-                style={{ flexGrow: 1 }}
-              />
-            </div>
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "3 / 14 / auto / end" }}
-            >
-              <div
-                className="box-root box-background--blue animationRightLeft"
-                style={{ flexGrow: 1 }}
-              />
-            </div>
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "4 / 17 / auto / 20" }}
-            >
-              <div
-                className="box-root box-background--gray100 animationRightLeft tans4s"
-                style={{ flexGrow: 1 }}
-              />
-            </div>
-            <div
-              className="box-root flex-flex"
-              style={{ gridArea: "5 / 14 / auto / 17" }}
-            >
-              <div
-                className="box-root box-divider--light-all-2 animationRightLeft tans3s"
-                style={{ flexGrow: 1 }}
-              />
-            </div>
+    <div className="page-content">
+      <h1 className="type_writer">Welcome to SociTrade</h1>
+      <div className="form-v7-content">
+        <div className="form-left"></div>
+        <form className="form-detail" id="myform" onSubmit={handleClick}>
+          <div className="form-row">
+            <label htmlFor="name">USERNAME</label>
+            <input
+              type="text"
+              name="name"
+              id="username"
+              required
+              className="input-text"
+              minLength={6}
+              onChange={handleChange}
+            />
           </div>
-        </div>
-        <div
-          className="box-root padding-top--24 flex-flex flex-direction--column"
-          style={{ flexGrow: 1, zIndex: 9 }}
-        >
-          <div className="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
-            <h1 class="type_writer">Welcome to SociTrade</h1>
+          <div className="form-row">
+            <label htmlFor="email">E-MAIL</label>
+            <input
+              type="text"
+              name="email"
+              id="your_email"
+              className="input-text"
+              required
+              pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}"
+              onChange={handleChange}
+            />
           </div>
-          <div className="formbg-outer">
-            <div className="formbg">
-              <div className="formbg-inner padding-horizontal--48">
-                <span className="padding-bottom--15">Register</span>
-                <form id="stripe-login">
-                  <div className="field padding-bottom--24">
-                    <label htmlFor="username">User name</label>
-                    <input name="username" />
-                  </div>
-                  <div className="field padding-bottom--24">
-                    <label htmlFor="email">Email</label>
-                    <input type="email" name="email" />
-                  </div>
-                  <div className="field padding-bottom--24">
-                    <div className="grid--50-50">
-                      <label htmlFor="password">Password</label>
-                    </div>
-                    <input type="password" name="password" />
-                  </div>
-                  <div className="field padding-bottom--24">
-                    <input
-                      type="submit"
-                      name="submit"
-                      defaultValue="Continue"
-                    />
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div className="footer-link padding-top--24">
-              <span>
-                Have already an account? <Link to="/login">Login here</Link>
-              </span>
-            </div>
+          <div className="form-row">
+            <label htmlFor="password">PASSWORD</label>
+            <input
+              minLength={6}
+              type="password"
+              name="password"
+              id="password"
+              className="input-text"
+              required
+              onChange={handleChange}
+            />
           </div>
-        </div>
+          <div className="form-row">
+            <label htmlFor="comfirm_password">CONFIRM PASSWORD</label>
+            <input
+              onChange={handleChange}
+              minLength={6}
+              type="password"
+              name="comfirm_password"
+              id="comfirm_password"
+              className="input-text"
+              required
+            />
+          </div>
+          <div className="form-row-last">
+            <input
+              disabled={isLoading}
+              type="submit"
+              name="register"
+              className="register"
+              value="Register"
+            />
+            <p>
+              Or<Link to="/login">Sign in</Link>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
