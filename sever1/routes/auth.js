@@ -3,8 +3,11 @@ import User from "../model/User.js";
 const router = express.Router();
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+
+import mongoose from "mongoose";
 //JWT
 import jwt from "jsonwebtoken";
+import checkVerify from "./verifyToken.js";
 
 var salt = bcrypt.genSaltSync(10);
 dotenv.config();
@@ -25,11 +28,17 @@ router.post("/register", async (req, res, next) => {
     password: hashPass,
   });
 
-  try {
-    const saveUser = await user.save();
-    return res.status(200).json(user._id);
-  } catch (err) {
-    return res.status(400).json(err.message);
+  if (user) {
+    user
+      .validate()
+      .then(() => {
+        console.log("k co loi j ca");
+        const saveUser = user.save();
+        return res.status(200).json(user._id);
+      })
+      .catch((err) => {
+        return res.status(400).json(err.message);
+      });
   }
 });
 
@@ -44,8 +53,15 @@ router.post("/login", async (req, res, next) => {
     return res.status(400).json("invalid password");
   }
   //creat webtoken
-  const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-  return res.header("auth-token", token).status(200).json("login thanh cong");
+  const token = jwt.sign(
+    { exp: Math.floor(Date.now() / 1000) + 30, data: { _id: user._id } },
+    process.env.TOKEN_SECRET
+  );
+
+  return res
+    .header("authtoken", token)
+    .status(200)
+    .json({ token: token, userId: user._id });
 });
 
 export default router;
