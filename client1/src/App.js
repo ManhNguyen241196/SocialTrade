@@ -16,6 +16,7 @@ import Profile from "./pages/Profile/Profile";
 import TopBar from "./components/topbar/Topbar";
 import LeftBar from "./components/leftbar/Leftbar";
 import Rightbar from "./components/rightbar/Rightbar";
+import Chat from "./pages/Home/Chat/Chat";
 
 function App() {
   const Layout = () => {
@@ -60,6 +61,10 @@ function App() {
     {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path: "/chat",
+      element: <Chat />,
     },
   ]);
 

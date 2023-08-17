@@ -1,0 +1,140 @@
+.images {
+    width: 100%;
+    height: 300px;
+    position: relative;
+}
+
+.cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profilePic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 150px;
+}
+
+.profileContainer {
+    padding: 20px 0px;
+}
+
+
+.uInfo {
+    height: 180px;
+    -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    border-radius: 20px;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    padding: 50px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 8px;
+}
+
+.info {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: left;
+
+}
+
+.left .item {
+    display: flex;
+    align-items: left;
+    gap: 15px;
+    color: black;
+}
+
+.item a {
+    width: 160px;
+    height: 40px;
+    overflow-y: hidden;
+}
+
+.left .item span {
+    font-size: 16px;
+    align-items: left;
+    font-weight: bold;
+}
+
+.linkSocial {
+    width: 70%;
+    display: flex;
+    align-items: left;
+    justify-content: space-between;
+}
+
+.linkSocial a {
+    font-size: 30px;
+}
+
+.center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-around;
+}
+
+.center span {
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+button {
+    border: none;
+    background-color: #5271ff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.inforActive {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.BtnContact {
+    display: flex;
+    gap: 20px;
+}
+
+.BtnContact button {
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Ubuntu, sans-serif;
+
+}

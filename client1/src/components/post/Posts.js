@@ -6,6 +6,7 @@ import axios from "axios";
 import { UserContext } from "../../context/UserContext";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import Comments from "../comment/Comment.js";
+import MorePost from "../morePost/MorePost";
 
 export default function Post({ post }) {
   const { currentUser } = useContext(UserContext);
@@ -18,6 +19,9 @@ export default function Post({ post }) {
   const [showCmt, setShowCmt] = useState(false);
 
   const [postDate, setPostDate] = useState("1 minute ago");
+  // State show more
+  const [showMore, setShowMore] = useState(false);
+  const [arrCor, setArrCor] = useState([]);
 
   const queryClient = useQueryClient();
 
@@ -131,20 +135,44 @@ export default function Post({ post }) {
     setShowCmt(!showCmt);
   };
 
+  //show more table 3 dots
+  const moreTableShow = (e) => {
+    setShowMore(!showMore);
+    setArrCor([e.pageX - 100, e.pageY + 5]);
+  };
+  let mystyle = {
+    top: arrCor[1],
+    left: arrCor[0],
+  };
+  const mouseOverHandle = () => {
+    setShowMore(false);
+  };
+
   return (
-    <div className="post">
+    <div className="post" onMouseLeave={mouseOverHandle}>
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
-            <Link to={"/"}>
+            <Link to={`/profile/${post?.user}`}>
               <img className="postProfileImg" src={userAvata} alt="" />
             </Link>
             <span className="postUsername">{userName}</span>
             <span className="postDate">{postDate} </span>
           </div>
-          <div className="postTopRight">
-            <i class="fas fa-ellipsis-h"></i>
-          </div>
+
+          {/* xư lí phân 3 dots  */}
+          {post?.user === currentUser && (
+            <>
+              <div className="postTopRight" onClick={moreTableShow}>
+                <i class="fas fa-ellipsis-h"></i>
+              </div>
+              {showMore && (
+                <div className="postTopRight_more" style={mystyle}>
+                  <MorePost setShowMore={setShowMore} post={post} />
+                </div>
+              )}
+            </>
+          )}
         </div>
         <div className="postCenter">
           <span className="postText">{post?.content}</span>

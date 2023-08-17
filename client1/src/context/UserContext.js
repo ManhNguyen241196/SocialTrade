@@ -27,17 +27,18 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("token", JSON.stringify(currentToken));
   }, [currentToken]);
 
+  const fetchAvata = async () => {
+    try {
+      const result = await axios.get(
+        "http://localhost:8800/api/profile?userID=" + currentUser
+      );
+      setCurrentAvata(result.data[0].imageAvata);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchAvata = async () => {
-      try {
-        const result = await axios.get(
-          "http://localhost:8800/api/profile?userID=" + currentUser
-        );
-        setCurrentAvata(result.data[0].imageAvata);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     if (currentUser) {
       fetchAvata();
     }
@@ -51,6 +52,7 @@ export const UserProvider = ({ children }) => {
         addToken,
         currentToken,
         currentAvata,
+        fetchAvata,
       }}
     >
       {children}

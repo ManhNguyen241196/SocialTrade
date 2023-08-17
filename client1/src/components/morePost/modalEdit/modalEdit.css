@@ -1,0 +1,27 @@
+.EditArea {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+}
+
+.row {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.row i {
+    position: absolute;
+    cursor: pointer;
+}
+
+.row i:hover {
+    opacity: 0.5;
+}
+
+button:disabled {
+    background-color: gray;
+    cursor: auto;
+
+}
