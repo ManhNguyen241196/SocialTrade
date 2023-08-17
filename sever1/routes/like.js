@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/", async (req, res, next) => {
   try {
-    const likePost = await Post.findOneAndUpdate(
+    const followerPost = await Post.findOneAndUpdate(
       { _id: req.query.postId },
       { $push: { likes: req.body.userLike } }
     );

@@ -6,13 +6,19 @@ import routerProfile from "./routes/profile.js";
 import routerUpload from "./routes/uploadGCS.js";
 import routerUser from "./routes/user.js";
 import routerLike from "./routes/like.js";
+import routerFollow from "./routes/follow.js";
+import routerConversation from "./routes/conversations.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
 const PORT = 8800;
 dotenv.config();
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", true);
@@ -42,6 +48,8 @@ app.use("/api/profile", routerProfile);
 app.use("/api/upload", routerUpload);
 app.use("/api/userDetail", routerUser);
 app.use("/api/like", routerLike);
+app.use("/api/follow", routerFollow);
+app.use("/api/conversation", routerConversation);
 
 routerUser;
 

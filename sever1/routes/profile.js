@@ -52,7 +52,7 @@ router.post("/", async (req, res, next) => {
 
 //edit profile
 router.put("/", async (req, res, next) => {
-  if (userIdOtherUser === userIdDummy) {
+  if (req.body.currentUser === req.query.userID) {
     const updateProfile = {
       imageAvata: req.body.imageAvata,
       imageWall: req.body.imageWall,
@@ -64,7 +64,7 @@ router.put("/", async (req, res, next) => {
 
     try {
       const doc = await Profile.findOneAndUpdate(
-        { user: userIdDummy },
+        { user: req.query.userID },
         updateProfile,
         {
           returnOriginal: false,

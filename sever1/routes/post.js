@@ -66,16 +66,17 @@ router.post("/", async (req, res, next) => {
 
 //edit old post
 router.put("/", async (req, res, next) => {
-  const filter = { _id: postIdDummy };
+  const filter = { _id: req.query.postId };
   const updatePost = {
     content: req.body.content,
     image: req.body.image,
   };
+
   try {
     const getPost = await Post.findById(filter);
     let mess = null;
 
-    if (getPost.user == userIdDummy) {
+    if (getPost.user == req.body.user) {
       try {
         const doc = await Post.findOneAndUpdate(filter, updatePost, {
           returnOriginal: false,
@@ -96,7 +97,7 @@ router.put("/", async (req, res, next) => {
 //delete post
 router.delete("/", async (req, res, next) => {
   try {
-    const deletePost = await Post.findByIdAndDelete(postIdDummy);
+    const deletePost = await Post.findByIdAndDelete(req.query.postId);
     return res.status(200).json("DELETE SUCCESSFULL POST");
   } catch (error) {
     return res.status(400).json(error.message);
@@ -106,7 +107,7 @@ router.delete("/", async (req, res, next) => {
 //get post của cụ thể 1 user. Sau này userIdDummy sẽ được thay bằng userId get từ req.query ?userId = "64a14eef1e193f574e9c64e5"
 router.get("/userId", async (req, res, next) => {
   try {
-    const data = await Post.find({ user: userIdDummy });
+    const data = await Post.find({ user: req.query.id });
     return res.status(200).json(data);
   } catch (error) {
     return res.status(400).json(error.message);
