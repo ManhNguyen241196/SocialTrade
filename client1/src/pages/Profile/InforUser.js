@@ -137,6 +137,11 @@ const InforUser = ({ userId }) => {
             formDataUser
           );
           alert(response.data);
+          window.open(
+            "http://localhost:3000/chat",
+            "example",
+            "width=1500,height=700"
+          );
         } else {
           window.open(
             "http://localhost:3000/chat",

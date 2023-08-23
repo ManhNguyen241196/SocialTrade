@@ -1,0 +1,23 @@
+.coverLay:before {
+    content: "";
+    position: relative;
+    top: 50px;
+    left: 0;
+    height: 60px;
+    display: block;
+    z-index: 100;
+    visibility: visible;
+    margin-top: -60px;
+}
+
+.status span {
+    pointer-events: none;
+}
+
+.activeClick {
+    background-color: rgb(206, 206, 206);
+}
+
+.notRead {
+    font-weight: bolder;
+}

@@ -1,9 +1,14 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./message.css";
+import axios from "axios";
+import { UserContext } from "../../context/UserContext";
 
-const Message = () => {
+const Message = ({ objCurrentConver }) => {
+  const [dataMess, setDataMess] = useState();
+  const { currentUser } = useContext(UserContext);
+
+  const DummyConversationId = "64df41c24373b716a895272a";
   const DummyCurUser = "64abed4ddddf66be855d6130";
-
   const DummyDataMessage = [
     {
       sender: "64a14eef1e193f574e9c64e5",
@@ -42,40 +47,66 @@ const Message = () => {
     },
   ];
 
-  function renderData(params) {
-    const data_li = params.map((param) => {
-      if (param.sender == DummyCurUser) {
-        return (
-          <li className="clearfix">
-            <div className="message-data align-right">
-              <span className="message-data-time">{param.createdAt}</span>{" "}
-              &nbsp; &nbsp;
-              <span className="message-data-name">{param.sender}</span>{" "}
-            </div>
-            <div className="message other-message float-right">
-              {param.text}
-            </div>
-          </li>
-        );
-      } else {
-        return (
-          <li>
-            <div className="message-data">
-              <span className="message-data-name">{param.sender}</span>
-              <span className="message-data-time">{param.createdAt}</span>
-            </div>
-            <div className="message my-message">{param.text}</div>
-          </li>
-        );
-      }
-    });
+  // useEffect(() => {
+  //   console.log(idCurrentConver);
+  // });
 
-    return <span>{data_li}</span>;
+  // fetch message cua 1 conversation cụ thể
+  useEffect(() => {
+    const getMessage = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8800/api/message/" + objCurrentConver.id
+        );
+        setDataMess(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    if (objCurrentConver) {
+      getMessage();
+    }
+  }, [objCurrentConver]);
+
+  function renderData(params) {
+    if (params) {
+      const data_li = params.map((param) => {
+        //check xem tin nhan do dk read chua
+
+        if (param.sender === currentUser) {
+          return (
+            <li className="clearfix">
+              <div className="message-data align-right">
+                <span className="message-data-time">{param.createdAt}</span>{" "}
+                &nbsp; &nbsp;
+                <span className="message-data-name">{param.sender}</span>{" "}
+              </div>
+              <div className="message other-message float-right">
+                {param.text}
+              </div>
+            </li>
+          );
+        } else {
+          return (
+            <li>
+              <div className="message-data">
+                <span className="message-data-name">{param.sender}</span>
+                <span className="message-data-time">{param.createdAt}</span>
+              </div>
+              <div className="message my-message">{param.text}</div>
+            </li>
+          );
+        }
+      });
+      return <span>{data_li}</span>;
+    }
   }
 
   return (
     <div className="chat-history">
-      <ul>{renderData(DummyDataMessage)}</ul>
+      {dataMess && <ul>{renderData(dataMess)}</ul>}
     </div>
   );
 };

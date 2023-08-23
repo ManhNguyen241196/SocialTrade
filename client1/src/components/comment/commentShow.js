@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 const CommentShow = ({ comment }) => {
   const [userName, setUserName] = useState("");
+  
   async function fetchingAvata() {
     const res = await axios.get(
       "http://localhost:8800/api/profile?userID=" + comment.user
