@@ -29,6 +29,7 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+//check tồn tại của conversation
 router.post("/check", async (req, res) => {
   const reqArr = [req.body.senderId, req.body.receiverId];
   //test check diu kien post
@@ -67,5 +68,6 @@ router.post("/check", async (req, res) => {
     res.status(500).json(error);
   }
 });
+
 
 export default router;

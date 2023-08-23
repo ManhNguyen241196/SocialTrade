@@ -8,6 +8,7 @@ import routerUser from "./routes/user.js";
 import routerLike from "./routes/like.js";
 import routerFollow from "./routes/follow.js";
 import routerConversation from "./routes/conversations.js";
+import routerMessage from "./routes/messages.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -50,6 +51,7 @@ app.use("/api/userDetail", routerUser);
 app.use("/api/like", routerLike);
 app.use("/api/follow", routerFollow);
 app.use("/api/conversation", routerConversation);
+app.use("/api/message", routerMessage);
 
 routerUser;
 
