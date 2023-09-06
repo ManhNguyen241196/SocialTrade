@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import "./message.css";
 import axios from "axios";
 import { UserContext } from "../../context/UserContext";
+import moment from "moment/moment";
 
 const Message = ({ objCurrentConver }) => {
   const [dataMess, setDataMess] = useState();
@@ -79,9 +80,12 @@ const Message = ({ objCurrentConver }) => {
           return (
             <li className="clearfix">
               <div className="message-data align-right">
-                <span className="message-data-time">{param.createdAt}</span>{" "}
+                <span className="message-data-time">
+                  {" "}
+                  {moment(param.createdAt).fromNow(true)}
+                </span>{" "}
                 &nbsp; &nbsp;
-                <span className="message-data-name">{param.sender}</span>{" "}
+                <span className="message-data-name">You</span>{" "}
               </div>
               <div className="message other-message float-right">
                 {param.text}
@@ -92,8 +96,12 @@ const Message = ({ objCurrentConver }) => {
           return (
             <li>
               <div className="message-data">
-                <span className="message-data-name">{param.sender}</span>
-                <span className="message-data-time">{param.createdAt}</span>
+                <span className="message-data-name">
+                  {objCurrentConver.otherUserName}
+                </span>
+                <span className="message-data-time">
+                  {moment(param.createdAt).fromNow(true)}
+                </span>
               </div>
               <div className="message my-message">{param.text}</div>
             </li>
@@ -103,6 +111,13 @@ const Message = ({ objCurrentConver }) => {
       return <span>{data_li}</span>;
     }
   }
+
+  useEffect(() => {
+    const chatHis = document.querySelector(".chat-history");
+    if (chatHis) {
+      chatHis.scrollTop = 15000;
+    }
+  }, [dataMess]);
 
   return (
     <div className="chat-history">

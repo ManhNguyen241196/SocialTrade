@@ -21,3 +21,47 @@
 .notRead {
     font-weight: bolder;
 }
+
+.coverLay {
+    padding: 10px 15px;
+    list-style: none;
+    border-radius: 3px
+}
+
+.coverLay:hover {
+    background: #efefef;
+    cursor: pointer
+}
+
+.coverLay.active {
+    background: #efefef
+}
+
+.coverLay .name {
+    font-size: 15px
+}
+
+.coverLay img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.coverLay img {
+    float: left;
+    border-radius: 50%;
+}
+
+.about {
+    float: left;
+    padding-left: 8px
+}
+
+.status {
+    line-height: 30px;
+    color: #999;
+    font-size: 13px;
+    width: 210px;
+    height: 30px;
+    overflow: hidden;
+}

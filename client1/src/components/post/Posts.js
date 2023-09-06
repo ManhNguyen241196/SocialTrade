@@ -164,7 +164,7 @@ export default function Post({ post }) {
           {post?.user === currentUser && (
             <>
               <div className="postTopRight" onClick={moreTableShow}>
-                <i class="fas fa-ellipsis-h"></i>
+                <i className="fas fa-ellipsis-h"></i>
               </div>
               {showMore && (
                 <div className="postTopRight_more" style={mystyle}>

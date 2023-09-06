@@ -49,7 +49,7 @@ const Chat = () => {
 
   const SendMessHandle = async () => {
     let formData = {
-      conversationId: "64df41c24373b716a895272a",
+      conversationId: objCurrentConver.id,
       sender: currentUser,
       text: textMessage,
     };

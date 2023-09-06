@@ -4,38 +4,26 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 const ListConversation = ({ dataConver, setObjCurrentConver }) => {
-  const [userName, setUserName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [lastMess, setLastMess] = useState("");
   const [isRead, setIsRead] = useState(true);
   const [click, setClick] = useState(true);
 
   // fetch name and avata
-  async function fetchingAvata() {
+  async function fetchingProfile() {
+    setIsLoading(true);
     const res = await axios.get(
       "http://localhost:8800/api/profile?userID=" + dataConver.userConver
     );
-
-    return res.data[0].imageAvata;
+    setIsLoading(false);
+    return res.data[0];
   }
   const { data } = useQuery(
-    ["avataConversation", dataConver.idConver],
-    fetchingAvata
+    ["userProfileConversation", dataConver.idConver],
+    fetchingProfile
   );
 
   useEffect(() => {
-    const fetchName = async () => {
-      try {
-        const result = await axios.get(
-          "http://localhost:8800/api/userDetail?userID=" + dataConver.userConver
-        );
-        if (result) {
-          setUserName(result.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     const fetchDataRead = async () => {
       try {
         const response = await axios.post(
@@ -66,7 +54,6 @@ const ListConversation = ({ dataConver, setObjCurrentConver }) => {
       }
     };
 
-    fetchName();
     fetchDataNotRead();
   }, [dataConver, click]);
 
@@ -84,31 +71,32 @@ const ListConversation = ({ dataConver, setObjCurrentConver }) => {
 
   // click to choose conversation active
   function selectHandle(e) {
-    // console.log(dataConver.idConver);
     setObjCurrentConver({
       id: dataConver.idConver,
-      srcAvata: data,
-      otherUserName: userName,
+      srcAvata: data.imageAvata,
+      otherUserName: data.name,
     });
-    // set message true -> false
     ChangeStateMessage();
-
     setClick(!click);
   }
 
   return (
     <>
-      <li className="clearfix coverLay" onClick={selectHandle}>
-        <img src={data} alt="avatar" />
-        <div className="about">
-          <div className="name">{userName}</div>
-          <div className="status">
-            {lastMess && (
-              <span className={!isRead && "notRead"}>{lastMess.text}</span>
-            )}
+      {!isLoading && data ? (
+        <li className="clearfix coverLay" onClick={selectHandle}>
+          <img src={data.imageAvata} alt="avatar" />
+          <div className="about">
+            <div className="name">{data.name}</div>
+            <div className="status">
+              {lastMess && (
+                <span className={!isRead && "notRead"}>{lastMess.text}</span>
+              )}
+            </div>
           </div>
-        </div>
-      </li>
+        </li>
+      ) : (
+        <p>loading...</p>
+      )}
     </>
   );
 };

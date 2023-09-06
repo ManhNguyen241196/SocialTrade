@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./socialBar.css";
 
 import { Menu } from "antd";
+import { useNavigate } from "react-router-dom";
 
 function getItem(label, key, icon, children, type) {
   return {
@@ -14,13 +15,8 @@ function getItem(label, key, icon, children, type) {
 }
 const items = [
   getItem("Status", "status", null, [
-    getItem(
-      "Status",
-      "all",
-      null,
-      [getItem("All Status", "1"), getItem("Followers Status", "2")],
-      "group"
-    ),
+    getItem("All Status", "1"),
+    getItem("Followers Status", "2"),
   ]),
   getItem(
     <a
@@ -35,20 +31,23 @@ const items = [
   ),
   getItem("Notification", "noti", null),
   getItem("Follow", "follow", null, [
-    getItem(
-      "Follow",
-      "allFollow",
-      null,
-      [getItem("Followers", "3"), getItem("Following", "4")],
-      "group"
-    ),
+    getItem("Followers", "3"),
+    getItem("Following", "4"),
   ]),
 ];
 
 export default function SocialBar() {
+  const navigate = useNavigate();
   const [currentClick, setCurrentClick] = useState("2");
   const onClick = (e) => {
+    if (e.key === "3") {
+      navigate("/listFollower");
+    }
+    if (e.key === "4") {
+      navigate("/listFollowing");
+    }
     console.log("click ", e.key);
+
     setCurrentClick(e.key);
   };
   return (

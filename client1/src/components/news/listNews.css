@@ -1,0 +1,5 @@
+.ListNews_header {
+    display: flex;
+    justify-content: right;
+    padding-right: 8px;
+}

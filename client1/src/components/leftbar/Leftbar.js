@@ -5,31 +5,37 @@ import "./leftbar.css";
 import { HomeFilled, MessageFilled } from "@ant-design/icons";
 import { Menu } from "antd";
 import SocialBar from "./socialBar/SocialBar";
+import { useNavigate } from "react-router-dom";
+import Weather from "../weatherApp/Weather";
 
 // khia bao item cho menu
 const items = [
   {
     label: "Social",
     key: "social",
-    icon: <i class="fas fa-users"></i>,
+    icon: <i className="fas fa-users"></i>,
   },
   {
     label: "News",
     key: "news",
-    icon: <i class="fas fa-newspaper"></i>,
+    icon: <i className="fas fa-newspaper"></i>,
     // disabled: true,
   },
 ];
 
 export default function LeftBar() {
+  const navigate = useNavigate();
+
   const [showNews, setShowNews] = useState(false); //2 view news or social
   const [current, setCurrent] = useState("social");
   const onClick = (e) => {
     if (e.key === "news") {
       setShowNews(true);
+      navigate("/news");
     }
     if (e.key === "social") {
       setShowNews(false);
+      navigate("/");
     }
     setCurrent(e.key);
   };
@@ -51,11 +57,7 @@ export default function LeftBar() {
           items={items}
         />
         <div className="sidebarContent"></div>
-        {showNews ? (
-          <p>this news sex bao gom ca phan weatherApp</p>
-        ) : (
-          <SocialBar />
-        )}
+        {showNews ? <Weather /> : <SocialBar />}
       </div>
     </div>
   );

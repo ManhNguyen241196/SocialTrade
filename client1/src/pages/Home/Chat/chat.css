@@ -44,49 +44,7 @@
     transition: .5s
 }
 
-.people-list .chat-list li {
-    padding: 10px 15px;
-    list-style: none;
-    border-radius: 3px
-}
 
-.people-list .chat-list li:hover {
-    background: #efefef;
-    cursor: pointer
-}
-
-.people-list .chat-list li.active {
-    background: #efefef
-}
-
-.people-list .chat-list li .name {
-    font-size: 15px
-}
-
-.people-list .chat-list img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.people-list img {
-    float: left;
-    border-radius: 50%;
-}
-
-.people-list .about {
-    float: left;
-    padding-left: 8px
-}
-
-.people-list .status {
-    line-height: 30px;
-    color: #999;
-    font-size: 13px;
-    width: 210px;
-    height: 30px;
-    overflow: hidden;
-}
 
 
 .chat .chat-header {
@@ -126,7 +84,6 @@
 
 .chat .chat-history ul li {
     list-style: none;
-    margin-bottom: 30px
 }
 
 .chat .chat-history ul li:last-child {
@@ -144,7 +101,7 @@
 
 .chat .chat-history .message-data-time {
     color: #434651;
-    padding-left: 6px
+    padding-left: 15px
 }
 
 .chat .chat-history .message {

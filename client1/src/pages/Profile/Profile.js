@@ -15,7 +15,6 @@ const fetchPostUser = async (userId) => {
     console.log(error);
   }
 };
-
 const Profile = () => {
   let { userId } = useParams();
   const { data, status } = useQuery(["post", userId], () =>

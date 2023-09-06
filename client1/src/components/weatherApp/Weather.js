@@ -43,7 +43,7 @@ const Weather = () => {
     }
   };
   return (
-    <div className="container">
+    <div className="container-weather">
       <div className="search-box">
         <i className="fas fa-map-marker-alt"></i>
         <input

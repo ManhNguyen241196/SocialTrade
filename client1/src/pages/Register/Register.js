@@ -38,6 +38,31 @@ const Register = () => {
         );
         // Work with the response...
         if (res.data) {
+          console.log(res.data);
+
+          // da ng ki thanh cong -> auto create profile
+          try {
+            let responseProfile = await axios.post(
+              "http://localhost:8800/api/profile",
+              {
+                user: res.data.id,
+                name: res.data.name,
+                imageAvata: "",
+                imageWall: "",
+                sex: "None",
+                website: "",
+                address: "",
+                bio: "",
+                followers: [],
+                following: [],
+              }
+            );
+
+            console.log("tao thanh cong", responseProfile.data);
+          } catch (err) {
+            console.log(err);
+          }
+
           setIsLoading(false);
           message.success("DAng ki thanh cong", 1, () => {
             setInputs({

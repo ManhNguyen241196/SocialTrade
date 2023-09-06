@@ -1,0 +1,53 @@
+.container {
+    background-color: white;
+    height: 13em;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+}
+
+.container:hover {
+    background-color: rgba(128, 128, 128, 0.3);
+}
+
+.container .colImg {
+    display: flex;
+}
+
+.container .colImg img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10%;
+}
+
+.container .colContent {
+    padding-left: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px;
+
+}
+
+.colContent_lable,
+.colContent_date {
+    height: 1.5em;
+    display: flex;
+    justify-content: left;
+    gap: 5px;
+}
+
+
+.colContent_lable_value {
+    font-weight: 600;
+}
+
+.colContent_title a {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: black !important;
+}
+
+.colContent_content {
+    height: 35%;
+    overflow-y: hidden;
+}
