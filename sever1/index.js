@@ -7,6 +7,7 @@ import routerUpload from "./routes/uploadGCS.js";
 import routerUser from "./routes/user.js";
 import routerLike from "./routes/like.js";
 import routerFollow from "./routes/follow.js";
+import routerSearch from "./routes/search.js";
 import routerConversation from "./routes/conversations.js";
 import routerMessage from "./routes/messages.js";
 import dotenv from "dotenv";
@@ -52,6 +53,7 @@ app.use("/api/like", routerLike);
 app.use("/api/follow", routerFollow);
 app.use("/api/conversation", routerConversation);
 app.use("/api/message", routerMessage);
+app.use("/api/search", routerSearch);
 
 routerUser;
 

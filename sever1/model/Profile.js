@@ -6,6 +6,10 @@ const profileSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  name: {
+    type: String,
+    required: false,
+  },
   imageAvata: {
     type: String,
     required: false,

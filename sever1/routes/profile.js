@@ -27,7 +27,8 @@ router.get("/", async (req, res, next) => {
 //add new profile
 router.post("/", async (req, res, next) => {
   const profile = new Profile({
-    user: userIdDummy,
+    user: req.body.user,
+    name: req.body.name,
     imageAvata: req.body.imageAvata,
     imageWall: req.body.imageWall,
     sex: req.body.sex,
@@ -76,6 +77,20 @@ router.put("/", async (req, res, next) => {
     }
   } else {
     return res.status(400).json("bạn chỉ có thể edit profile của CHÍNH MÌNH");
+  }
+});
+
+//lay avata
+router.get("/avata", async (req, res, next) => {
+  try {
+    const data = await Profile.find({ user: req.query.userId });
+    if (data.length === 0) {
+      return res.status(200).json("User no profile");
+    } else {
+      return res.status(200).json(data[0].imageAvata);
+    }
+  } catch (error) {
+    return res.status(400).json(error.message);
   }
 });
 

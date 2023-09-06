@@ -33,7 +33,7 @@ router.post("/register", async (req, res, next) => {
       .then(() => {
         console.log("k co loi j ca");
         const saveUser = user.save();
-        return res.status(200).json(user._id);
+        return res.status(200).json({ id: user._id, name: user.name });
       })
       .catch((err) => {
         return res.status(400).json(err.message);
