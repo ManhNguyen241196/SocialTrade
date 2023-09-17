@@ -1,16 +1,12 @@
-import React, { useContext } from "react";
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-  Outlet,
-} from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import News from "./pages/News/News";
 
 import "./App.css";
+import { PostProvider } from "./context/PostContext";
 import { UserContext, UserProvider } from "./context/UserContext";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Profile from "./pages/Profile/Profile";
@@ -20,6 +16,9 @@ import Rightbar from "./components/rightbar/Rightbar";
 import Chat from "./pages/Home/Chat/Chat";
 import ListFollower from "./pages/ListFollower/ListFollower";
 import ListFollowing from "./pages/ListFollowing/ListFollowing";
+import Noti from "./pages/Notification/Noti";
+import AllPosts from "./pages/AllPosts/AllPosts";
+import { SocketProvider } from "./context/SocketContext";
 
 function App() {
   const Layout = () => {
@@ -38,6 +37,7 @@ function App() {
       </div>
     );
   };
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -67,6 +67,18 @@ function App() {
           path: "listFollowing",
           element: <ListFollowing />,
         },
+        {
+          path: "notification",
+          element: <Noti />,
+        },
+        {
+          path: "allPosts",
+          element: <AllPosts />,
+        },
+        {
+          path: "chat",
+          element: <Chat />,
+        },
       ],
     },
     {
@@ -77,18 +89,22 @@ function App() {
       path: "/register",
       element: <Register />,
     },
-    {
-      path: "/chat",
-      element: <Chat />,
-    },
+    // {
+    //   path: "/chat",
+    //   element: <Chat />,
+    // },
   ]);
 
   return (
     <div className="App">
       <UserProvider>
-        {/* <React.StrictMode> */}
-        <RouterProvider router={router} />
-        {/* </React.StrictMode> */}
+        <SocketProvider>
+          <PostProvider>
+            {/* <React.StrictMode> */}
+            <RouterProvider router={router} />
+            {/* </React.StrictMode> */}
+          </PostProvider>
+        </SocketProvider>
       </UserProvider>
     </div>
   );

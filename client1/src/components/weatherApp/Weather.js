@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 const WEATHER_API_KEY = "a39cbac3ab591216905dc563049a4122";
 
 const Weather = () => {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("Ha Noi");
   const [dataWeather, setDataWeather] = useState({});
+  const [clickState, setClickState] = useState(false);
 
   useEffect(() => {
     console.log(dataWeather);
@@ -28,19 +29,26 @@ const Weather = () => {
     setDataWeather(Obj);
   };
 
-  //fetch API
-  const handleClick = async () => {
-    try {
-      let res = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${WEATHER_API_KEY}`
-      );
-      reFormData(res.data);
-    } catch (err) {
-      console.log(err.response.data.message);
-      if (err.response.data.message === "city not found") {
-        setDataWeather({ state: "city not found" });
+  useEffect(() => {
+    const fetchApiWeather = async () => {
+      try {
+        let res = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${WEATHER_API_KEY}`
+        );
+        reFormData(res.data);
+      } catch (err) {
+        console.log(err.response.data.message);
+        if (err.response.data.message === "city not found") {
+          setDataWeather({ state: "city not found" });
+        }
       }
-    }
+    };
+    fetchApiWeather();
+  }, [clickState]);
+
+  //fetch API
+  const handleClick = () => {
+    setClickState(!clickState);
   };
   return (
     <div className="container-weather">

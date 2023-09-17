@@ -3,10 +3,12 @@ import "./message.css";
 import axios from "axios";
 import { UserContext } from "../../context/UserContext";
 import moment from "moment/moment";
+import { SocketContext } from "../../context/SocketContext";
 
 const Message = ({ objCurrentConver }) => {
   const [dataMess, setDataMess] = useState();
   const { currentUser } = useContext(UserContext);
+  const { socket } = useContext(SocketContext);
 
   const DummyConversationId = "64df41c24373b716a895272a";
   const DummyCurUser = "64abed4ddddf66be855d6130";
@@ -48,9 +50,13 @@ const Message = ({ objCurrentConver }) => {
     },
   ];
 
-  // useEffect(() => {
-  //   console.log(idCurrentConver);
-  // });
+  useEffect(() => {
+    if (socket) {
+      socket.on("sendMessageServer", (dataMessSocket) => {
+        console.log(dataMessSocket);
+      });
+    }
+  }, [socket]);
 
   // fetch message cua 1 conversation cụ thể
   useEffect(() => {

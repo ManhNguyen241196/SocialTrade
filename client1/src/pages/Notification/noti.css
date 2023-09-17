@@ -1,0 +1,34 @@
+.listNotiTable {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.listNotiTable .dateNoti_content {
+    font-size: 14px;
+}
+
+.listNotiTable_container {
+    min-width: 500px;
+    max-width: 550px;
+}
+
+.listNotiTable .coverLay_noti {
+    padding: 10px 15px;
+    list-style: none;
+    border-radius: 3px;
+    display: flex;
+    flex: 8;
+}
+
+.listNotiTable .moreBtn {
+    visibility: visible;
+    margin: auto;
+    flex: 1;
+    text-align: center;
+}
+
+.moreBtn:hover {
+    background: #efefef;
+    cursor: pointer
+}

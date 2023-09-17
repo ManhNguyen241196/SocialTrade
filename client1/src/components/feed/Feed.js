@@ -15,7 +15,7 @@ const Feed = ({ posts }) => {
     <div className="feed">
       <div className="feedWrapper">
         {newArrPosts.map((p) => (
-          <Post key={p._id} post={p} />
+          <Post key={`feed${p._id}`} post={p} />
         ))}
       </div>
     </div>

@@ -3,13 +3,12 @@ import "./comment.css";
 // import { AuthContext } from "../../context/authContext";
 // import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 // import { makeRequest } from "../../axios";
-import moment from "moment";
-import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import CommentShow from "./commentShow.js";
 import { UserContext } from "../../context/UserContext";
 
-const Comments = ({ postId }) => {
+const Comments = ({ postUser, postId, fetchCmtNoti }) => {
   const [desc, setDesc] = useState("");
   const { currentUser, currentAvata } = useContext(UserContext);
   const queryClient = useQueryClient();
@@ -46,6 +45,7 @@ const Comments = ({ postId }) => {
         dataFormCmt
       );
       console.log("comment thanh cong vao post", postId);
+      fetchCmtNoti("comment", currentUser, postUser, postId);
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       setDesc("");
     } catch (error) {

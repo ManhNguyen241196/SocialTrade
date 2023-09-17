@@ -18,17 +18,7 @@ const items = [
     getItem("All Status", "1"),
     getItem("Followers Status", "2"),
   ]),
-  getItem(
-    <a
-      href="http://localhost:3000/chat"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Chat
-    </a>,
-    "chat",
-    null
-  ),
+  getItem("Chat", "chat", null),
   getItem("Notification", "noti", null),
   getItem("Follow", "follow", null, [
     getItem("Followers", "3"),
@@ -39,16 +29,21 @@ const items = [
 export default function SocialBar() {
   const navigate = useNavigate();
   const [currentClick, setCurrentClick] = useState("2");
-  const onClick = (e) => {
-    if (e.key === "3") {
-      navigate("/listFollower");
-    }
-    if (e.key === "4") {
-      navigate("/listFollowing");
-    }
-    console.log("click ", e.key);
+  const menuItems = {
+    1: "/allPosts",
+    2: "/",
+    3: "/listFollower",
+    4: "/listFollowing",
+    noti: "/notification",
+    chat: "/chat",
+  };
 
-    setCurrentClick(e.key);
+  const onClick = (e) => {
+    const menuItem = menuItems[e.key];
+    if (menuItem) {
+      navigate(menuItem);
+      setCurrentClick(e.key);
+    }
   };
   return (
     <div className="socialbar">

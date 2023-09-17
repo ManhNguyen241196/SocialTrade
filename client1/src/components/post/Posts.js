@@ -7,6 +7,7 @@ import { UserContext } from "../../context/UserContext";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import Comments from "../comment/Comment.js";
 import MorePost from "../morePost/MorePost";
+import createNewNoti from "../../method/createNewNoti";
 
 export default function Post({ post }) {
   const { currentUser } = useContext(UserContext);
@@ -118,10 +119,31 @@ export default function Post({ post }) {
     }
   };
 
+  //notification like area
+  const fetchLikeNoti = async (type) => {
+    let data = {
+      senderId: currentUser,
+      receiverId: post.user,
+      postId: post._id,
+    };
+    try {
+      let res = await axios.post(
+        "http://localhost:8800/api/notification?notiType=" + type,
+        data
+      );
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   //like button
   const likeHandle = () => {
     setLikeState(true);
     fetchLikePost();
+    if (post.user !== currentUser) {
+      createNewNoti("like", currentUser, post.user, post._id);
+    }
   };
 
   // disLike button
@@ -207,7 +229,11 @@ export default function Post({ post }) {
       {showCmt && (
         <div>
           {" "}
-          <Comments postId={post._id} />
+          <Comments
+            postUser={post.user}
+            postId={post._id}
+            fetchCmtNoti={createNewNoti}
+          />
         </div>
       )}
     </div>

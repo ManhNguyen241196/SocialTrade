@@ -1,7 +1,7 @@
 .topbarContainer {
   height: 50px;
   width: 100%;
-  background-color: #1877f2;
+  background-color: #18b4f2;
   display: flex;
   align-items: center;
   position: sticky;
@@ -105,4 +105,11 @@
 .showMore_link {
   display: flex;
   justify-content: center;
+}
+
+.container_noti {
+  min-width: 250px;
+  max-width: 300px;
+  max-height: 345px;
+  overflow: scroll;
 }

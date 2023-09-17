@@ -1,42 +1,40 @@
 import axios from "axios";
-import "./Home.css";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../context/UserContext";
-import CheckFunc from "../../components/CheckVerify";
+import "./allPosts.css";
+import { useContext, useState } from "react";
 import Feed from "../../components/feed/Feed";
-
-// import Weather from "../../components/weatherApp/Weather";
 
 //react query
 import { useQuery } from "@tanstack/react-query";
+import CheckFunc from "../../components/CheckVerify";
+
 import Share from "../../components/share/Share";
 import { PostContext } from "../../context/PostContext";
-import { SocketContext } from "../../context/SocketContext";
+import { UserContext } from "../../context/UserContext";
 
-const Home = () => {
+const AllPosts = () => {
   const { currentUser, addUser } = useContext(UserContext);
   const { addPost, currentPost } = useContext(PostContext);
-  const { socket, addSocket } = useContext(SocketContext);
-  const navigate = useNavigate();
 
   const postQuery = useQuery({
-    queryKey: ["posts"],
+    queryKey: ["AllPosts"],
     queryFn: async () => {
       let querydata = 1;
       const fetchData = async (objectHeaders) => {
         try {
-          const response = await axios.get("http://localhost:8800/api/post", {
-            headers: objectHeaders,
-          });
-          const Mydata = await response.data;
-          addUser(Mydata.dataPost.user);
-          addPost([...Mydata.dataPost.followers]);
+          const response = await axios.get(
+            "http://localhost:8800/api/post/all",
+            {
+              headers: objectHeaders,
+            }
+          );
+          const DataAllPosts = await response.data;
+          addUser(DataAllPosts.dataPost.user);
+          addPost([...DataAllPosts.dataPost.followers]);
         } catch (error) {
+          console.log(error);
           if (error.response.data === "Invalid token") {
             addUser(null);
           }
-          console.log(error);
         }
       };
       CheckFunc(fetchData);
@@ -52,17 +50,10 @@ const Home = () => {
     return <h1>Error loading data!!!</h1>;
   }
 
-  const handleLogout = () => {
-    localStorage.clear();
-    addUser(null);
-    navigate("/login");
-  };
-
   return (
     <>
       {currentUser ? (
         <div className="home">
-          <button onClick={handleLogout}>logout</button> <h2>{currentUser}</h2>
           <Share />
           <Feed posts={currentPost} />
         </div>
@@ -73,4 +64,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AllPosts;

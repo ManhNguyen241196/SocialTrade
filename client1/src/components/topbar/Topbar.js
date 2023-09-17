@@ -1,10 +1,12 @@
 import "./topbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 import {
   BellFilled,
+  LogoutOutlined,
   SearchOutlined,
+  UserOutlined,
   UsergroupAddOutlined,
   WechatOutlined,
 } from "@ant-design/icons";
@@ -13,14 +15,26 @@ import ListConversation from "../listConvarsation/ListConversation";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import SearchTop from "./searchTop.js/SearchTop";
+import ListNoti from "../listNoti/ListNoti";
+
+//module function noti
+import fetchNoti from "../../method/createNoti";
 
 export default function TopBar() {
-  const { currentAvata, currentUser } = useContext(UserContext);
+  const { currentAvata, currentUser, addUser } = useContext(UserContext);
   const [objCurrentConver, setObjCurrentConver] = useState(null); // phục vụ cho hiển thị đoạn chat popup
 
   const [dataUser, setDataUser] = useState("");
   const [wordSearch, setWordSearch] = useState("");
   const [contentSearch, setContentSearch] = useState("");
+
+  const [clickNoti, setClickNoti] = useState(false);
+  const [clickNoti_notFollow, setClickNoti_notFollow] = useState(false);
+
+  const [dataNoti, setDataNoti] = useState(null);
+
+  const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
 
   //fetch data
   function RenderData(arrays) {
@@ -66,13 +80,64 @@ export default function TopBar() {
           })}
       </ul>
       <span className="showMore_link">
-        <Link to="/chat">Show more</Link>
+        <Link to="/notification">Show more</Link>
       </span>
     </div>
   );
 
-  //contentSearch
+  //------------------------------------------------------------------
+  //fetch data noti not follow
+  useEffect(() => {
+    fetchNoti("all", "notFollow", currentUser, setDataNoti);
+  }, [clickNoti]);
 
+  const handleClickNoti = () => {
+    setClickNoti(!clickNoti);
+  };
+
+  const ChangeCurData = (id) => {
+    const found = dataNoti.find((element) => element._id === id);
+    if (!found.isMark) {
+      found.isMark = true;
+    }
+    setDataNoti([...dataNoti]);
+    console.log("ChangeCurData", dataNoti);
+  };
+  //content Noti   //click bieu tuong bell sẽ load hiện toan bộ noti có dạng false -> chuyển trạng thái isMark thành true của toàn bộ
+  const contentNoti = (
+    <div>
+      <ul className="container_noti">
+        {dataNoti &&
+          dataNoti.map((item) => {
+            return (
+              <ListNoti
+                key={item._id}
+                dataNoti={item}
+                ChangeCurData={ChangeCurData}
+              />
+            );
+          })}
+      </ul>
+      <span className="showMore_link">
+        <Link to="/notification">Show more</Link>
+      </span>
+    </div>
+  );
+
+  //------------------------------------------------------------------
+  //fetch data noti follow
+  useEffect(() => {
+    fetchNoti("all", "follow", currentUser, setDataNoti);
+  }, [clickNoti_notFollow]);
+
+  const handleClickNoti_notFollow = () => {
+    setClickNoti_notFollow(!clickNoti_notFollow);
+  };
+  //content Noti_notFollow  click vao bieu tuong group để show ra
+  const contentNoti_notFollow = contentNoti;
+  //----------------------------------------------------------------
+
+  //contentSearch
   useEffect(() => {
     setContentSearch(
       <div>
@@ -80,10 +145,33 @@ export default function TopBar() {
       </div>
     );
   }, [wordSearch]);
-
   const handleChangeInput = (e) => {
     setWordSearch(e.target.value);
   };
+
+  // content userImg
+  const showPopover = () => {
+    setVisible(!visible);
+  };
+  const handleLogout = () => {
+    localStorage.clear();
+    addUser(null);
+    navigate("/login");
+  };
+
+  const contentUser = (
+    <div className="moreBtn_container">
+      <div className="moreBtn_option">
+        <Link to={`/profile/${currentUser}`}>
+          <UserOutlined /> &ensp; Profile
+        </Link>
+      </div>
+      <div className="moreBtn_option" onClick={handleLogout}>
+        {" "}
+        <LogoutOutlined /> &ensp; Log out{" "}
+      </div>
+    </div>
+  );
 
   return (
     <div className="topbarContainer">
@@ -115,11 +203,17 @@ export default function TopBar() {
           <span className="topbarLink">Homepage</span>
         </div>
         <div className="topbarIcons">
-          <div className="topbarIconItem">
-            <UsergroupAddOutlined />
-            <span className="topbarIconBadge">1</span>
-          </div>
-
+          {/* popup NOTI FOLLOW */}
+          <Popover
+            content={contentNoti_notFollow}
+            title="Noti follow"
+            trigger="click"
+          >
+            <div className="topbarIconItem" onClick={handleClickNoti_notFollow}>
+              <UsergroupAddOutlined />
+              <span className="topbarIconBadge">1</span>
+            </div>
+          </Popover>
           {/* popup MESSAGE */}
           <Popover content={content} title="Message" trigger="click">
             <div className="topbarIconItem">
@@ -127,13 +221,21 @@ export default function TopBar() {
               <span className="topbarIconBadge">2</span>
             </div>
           </Popover>
-
-          <div className="topbarIconItem">
-            <BellFilled />
-            <span className="topbarIconBadge">1</span>
-          </div>
+          {/* popup NOTI NOT FOLLOW */}
+          <Popover content={contentNoti} title="Notification" trigger="click">
+            <div className="topbarIconItem" onClick={handleClickNoti}>
+              <BellFilled />
+              <span className="topbarIconBadge">1</span>
+            </div>
+          </Popover>
         </div>
-        <Link to={`/profile/${currentUser}`}>
+
+        <Popover
+          onOpenChange={showPopover}
+          open={visible}
+          content={contentUser}
+          trigger="click"
+        >
           <img
             src={
               currentAvata
@@ -143,7 +245,7 @@ export default function TopBar() {
             alt=""
             className="topbarImg"
           />
-        </Link>
+        </Popover>
       </div>
     </div>
   );

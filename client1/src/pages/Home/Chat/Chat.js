@@ -7,6 +7,7 @@ import { UserContext } from "../../../context/UserContext";
 import ListConversation from "../../../components/listConvarsation/ListConversation";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { SocketContext } from "../../../context/SocketContext";
 
 const Chat = () => {
   const [dataUser, setDataUser] = useState("");
@@ -14,6 +15,7 @@ const Chat = () => {
   const [objCurrentConver, setObjCurrentConver] = useState(null);
 
   const { currentUser } = useContext(UserContext);
+  const { socket } = useContext(SocketContext);
 
   const onSearch = (value) => console.log(value);
 
@@ -52,6 +54,7 @@ const Chat = () => {
       conversationId: objCurrentConver.id,
       sender: currentUser,
       text: textMessage,
+      reciever: objCurrentConver.otherUserName_Id,
     };
 
     try {
@@ -59,10 +62,15 @@ const Chat = () => {
         "http://localhost:8800/api/message",
         formData
       );
+
+      //------Socket IO ----------
+      if (socket) {
+        socket.emit("getMessageClient", formData);
+      }
+
       if (res) {
         setTextMessage("");
       }
-      console.log(res.data);
     } catch (error) {
       console.log(error.message);
     }
@@ -98,35 +106,6 @@ const Chat = () => {
                     className="list-unstyled chat-list mt-2 mb-0"
                     onClick={UlHandleClick}
                   >
-                    {/* <li className="clearfix">
-                    <img
-                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                      alt="avatar"
-                    />
-                    <div className="about">
-                      <div className="name">Vincent Porter</div>
-                      <div className="status">
-                        <span>
-                          {" "}
-                          last message nay la cuoi cung kha dai message nay la
-                          cuoi cung kha dai{" "}
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="clearfix active">
-                    <img
-                      src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                      alt="avatar"
-                    />
-                    <div className="about">
-                      <div className="name">Aiden Chavez</div>
-                      <div className="status">
-                        {" "}
-                        <i className="fa fa-circle online" /> online{" "}
-                      </div>
-                    </div>
-                  </li> */}
                     {dataUser.map((item) => {
                       return (
                         <>

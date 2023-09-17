@@ -1,0 +1,105 @@
+.coverLay_noti:before {
+    content: "";
+    position: relative;
+    top: 50px;
+    left: 0;
+    height: 60px;
+    display: block;
+    z-index: 100;
+    visibility: visible;
+    margin-top: -60px;
+}
+
+.status span {
+    pointer-events: none;
+}
+
+.activeClick {
+    background-color: rgb(206, 206, 206);
+}
+
+.notRead {
+    font-weight: bolder;
+}
+
+.coverLay_noti {
+    padding: 10px 15px;
+    list-style: none;
+    border-radius: 3px;
+    display: flex;
+}
+
+.coverLay_noti:hover {
+    opacity: 0.6;
+    cursor: pointer
+}
+
+.coverLay_noti.active {
+    background: #efefef
+}
+
+.coverLay_noti .name {
+    font-size: 15px
+}
+
+.coverLay_noti img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.coverLay_noti img {
+    float: left;
+    border-radius: 50%;
+}
+
+.about {
+    float: left;
+    padding-left: 8px
+}
+
+.notiContent {
+    color: #999;
+    font-size: 13px;
+    display: flex;
+}
+
+.notiContent p {
+    font-weight: bolder;
+
+}
+
+.dateNoti .dateNoti_content {
+    color: #1877f2;
+}
+
+.isRead .dateNoti_content {
+    color: gray;
+}
+
+.row_noti {
+    display: flex;
+    justify-content: space-between;
+    background-color: #efefef;
+
+}
+
+.isRead {
+    background-color: white;
+}
+
+.moreBtn {
+    visibility: hidden;
+}
+
+.moreBtn_container {
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.moreBtn_container div:hover {
+    cursor: pointer;
+    opacity: 0.4;
+}

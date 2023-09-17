@@ -1,5 +1,46 @@
+import { useContext, useEffect, useState } from "react";
 import "./rightbar.css";
+import { SocketContext } from "../../context/SocketContext";
+import { UserContext } from "../../context/UserContext";
+import { io } from "socket.io-client";
 export default function Rightbar({ user }) {
+  const { socket, addSocket } = useContext(SocketContext);
+  const { currentUser } = useContext(UserContext);
+
+  // const [socket, setSocket] = useState(null);
+  const [connectSocket, setConnectSocket] = useState(false);
+
+  /// socket IO
+  useEffect(() => {
+    if (!connectSocket) {
+      addSocket(io("http://localhost:7000"));
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (socket) {
+      setConnectSocket(socket.connected);
+      // if (connectSocket) {
+      socket.emit("addUser", currentUser);
+      // }
+    }
+  }, [socket, currentUser]);
+
+  // console.log("socket in ra rightbar la:  ", socket);
+
+  const testIo = () => {
+    if (socket) {
+      socket.on("sendId", (arg1) => {
+        console.log("useronline là:   ", arg1);
+      });
+    }
+  };
+
+  const clickTestIo = () => {
+    socket.emit("clickTest", { name: currentUser });
+  };
+  //----------------------
+
   const HomeRightbar = () => {
     return (
       <>
@@ -22,6 +63,11 @@ export default function Rightbar({ user }) {
 
   return (
     <div className="rightbar">
+      <button className="clickBtnTest" onClick={clickTestIo}>
+        {" "}
+        Click test IO{" "}
+      </button>
+      {testIo()}
       <div className="rightbarWrapper">
         <HomeRightbar />
       </div>

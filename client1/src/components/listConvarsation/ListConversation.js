@@ -75,6 +75,7 @@ const ListConversation = ({ dataConver, setObjCurrentConver }) => {
       id: dataConver.idConver,
       srcAvata: data.imageAvata,
       otherUserName: data.name,
+      otherUserName_Id: dataConver.userConver,
     });
     ChangeStateMessage();
     setClick(!click);

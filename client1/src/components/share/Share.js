@@ -1,11 +1,12 @@
 import "./share.css";
 
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { message } from "antd";
 import EmojiPicker from "emoji-picker-react";
 import { UserContext } from "../../context/UserContext";
+import createNewNoti from "../../method/createNewNoti";
 
 export default function Share() {
   const [emojiShow, setEmojiShow] = useState(false);
@@ -13,6 +14,34 @@ export default function Share() {
   const [file, setFile] = useState(null);
   const { currentAvata, currentUser } = useContext(UserContext);
 
+  const [followers, setFollowes] = useState([]);
+
+  // send Noti for all user followers
+  useEffect(() => {
+    //---------get all userFollowers   //moi khi load trang sex tu dong load property cua curuser
+    const fetchUserFollower = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8800/api/profile?userID=" + currentUser
+        );
+        setFollowes(res.data[0].followers);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUserFollower();
+  }, [currentUser]);
+  //---------send noti foreach user in arr.
+  const sendNotiNewPost = (postId) => {
+    if (followers.length > 0) {
+      followers.map((follower) => {
+        return createNewNoti("post", currentUser, follower, postId);
+      });
+    }
+  };
+  //-------------------------------------------------------------
+
+  // post new post
   const fetchAddPost = async (fileImg) => {
     let dataPost = {
       user: currentUser,
@@ -30,6 +59,9 @@ export default function Share() {
         desc.current.value = "";
         setFile(null);
       });
+
+      //post noti
+      sendNotiNewPost(result.data);
     } catch (error) {
       console.log(error);
       message.error("post that bai", 1);
