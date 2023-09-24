@@ -7,10 +7,14 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import CommentShow from "./commentShow.js";
 import { UserContext } from "../../context/UserContext";
+import { SocketContext } from "../../context/SocketContext";
 
 const Comments = ({ postUser, postId, fetchCmtNoti }) => {
   const [desc, setDesc] = useState("");
-  const { currentUser, currentAvata } = useContext(UserContext);
+  const { currentUser, currentAvata, currentName } = useContext(UserContext);
+
+  //socket IO
+  const { socket } = useContext(SocketContext);
   const queryClient = useQueryClient();
 
   async function fetchingCmts() {
@@ -46,6 +50,18 @@ const Comments = ({ postUser, postId, fetchCmtNoti }) => {
       );
       console.log("comment thanh cong vao post", postId);
       fetchCmtNoti("comment", currentUser, postUser, postId);
+
+      //send to server socket IO
+      if (res) {
+        if (socket) {
+          socket.emit("getNotiClient", {
+            currUser: currentUser,
+            currUser_name: currentName,
+            otherUser: postUser,
+            type: "comment",
+          });
+        }
+      }
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       setDesc("");
     } catch (error) {

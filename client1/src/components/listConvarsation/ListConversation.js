@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./listConversation.css";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { CountMessContext } from "../../context/CountMess";
 
 const ListConversation = ({ dataConver, setObjCurrentConver }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [lastMess, setLastMess] = useState("");
   const [isRead, setIsRead] = useState(true);
   const [click, setClick] = useState(true);
+
+  const { subtractionCount } = useContext(CountMessContext);
 
   // fetch name and avata
   async function fetchingProfile() {
@@ -44,6 +47,8 @@ const ListConversation = ({ dataConver, setObjCurrentConver }) => {
           `http://localhost:8800/api/message/lastMessage/${dataConver.idConver}?userId=${dataConver.userConver}`
         );
         if (response.data.length > 0) {
+          //Count so mess is not read
+
           setIsRead(false);
           setLastMess(response.data[0]);
         } else {
@@ -63,7 +68,10 @@ const ListConversation = ({ dataConver, setObjCurrentConver }) => {
       const response = await axios.put(
         `http://localhost:8800/api/message/changeState/${dataConver.idConver}?userId=${dataConver.userConver}`
       );
-      console.log(response.data);
+
+      if (parseFloat(response.data)) {
+        subtractionCount(response.data);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -90,7 +98,9 @@ const ListConversation = ({ dataConver, setObjCurrentConver }) => {
             <div className="name">{data.name}</div>
             <div className="status">
               {lastMess && (
-                <span className={!isRead && "notRead"}>{lastMess.text}</span>
+                <span className={!isRead ? "notRead" : undefined}>
+                  {lastMess.text}
+                </span>
               )}
             </div>
           </div>

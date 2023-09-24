@@ -5,8 +5,8 @@ import { UserContext } from "../../context/UserContext";
 import moment from "moment/moment";
 import { SocketContext } from "../../context/SocketContext";
 
-const Message = ({ objCurrentConver }) => {
-  const [dataMess, setDataMess] = useState();
+const Message = ({ objCurrentConver, newMessYou }) => {
+  const [dataMess, setDataMess] = useState(null);
   const { currentUser } = useContext(UserContext);
   const { socket } = useContext(SocketContext);
 
@@ -50,14 +50,6 @@ const Message = ({ objCurrentConver }) => {
     },
   ];
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("sendMessageServer", (dataMessSocket) => {
-        console.log(dataMessSocket);
-      });
-    }
-  }, [socket]);
-
   // fetch message cua 1 conversation cụ thể
   useEffect(() => {
     const getMessage = async () => {
@@ -65,8 +57,11 @@ const Message = ({ objCurrentConver }) => {
         const response = await axios.get(
           "http://localhost:8800/api/message/" + objCurrentConver.id
         );
-        setDataMess(response.data);
-        console.log(response.data);
+        console.log("FETCH MESS");
+        setDataMess((prev) => {
+          return ([...prev] = [...response.data]);
+        });
+        // console.log(response.data);
       } catch (error) {
         console.log(error.message);
       }
@@ -77,6 +72,43 @@ const Message = ({ objCurrentConver }) => {
     }
   }, [objCurrentConver]);
 
+  ///Socket IO nhận mess từ server socket . Chỉ client nào được nhận từ socket thhi moi co the them arr đuoc
+  const addMess = (newMess, arr) => {
+    if (
+      !arr.some((mess) => {
+        return mess.createdAt === newMess.createdAt;
+      })
+    ) {
+      if (newMess) {
+        setDataMess((prev) => {
+          return Array.from(new Set([...prev, newMess]));
+        });
+        console.log(newMess);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (socket && dataMess) {
+      console.log("dataMess truoc khi chay socket: ", dataMess);
+      //get data tu socket IO
+      socket.on("sendMessageServer", (dataMessSocket) => {
+        console.log("dataMessSocket:  ", dataMessSocket);
+        if (dataMess) {
+          if (dataMessSocket) {
+            addMess(dataMessSocket, dataMess);
+          }
+        }
+      });
+    }
+  }, [socket && dataMess]);
+
+  useEffect(() => {
+    if (dataMess && newMessYou) {
+      addMess(newMessYou, dataMess);
+    }
+  }, [newMessYou]);
+
   function renderData(params) {
     if (params) {
       const data_li = params.map((param) => {
@@ -84,7 +116,7 @@ const Message = ({ objCurrentConver }) => {
 
         if (param.sender === currentUser) {
           return (
-            <li className="clearfix">
+            <li className="clearfix" key={param.createdAt}>
               <div className="message-data align-right">
                 <span className="message-data-time">
                   {" "}

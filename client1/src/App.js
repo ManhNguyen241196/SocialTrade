@@ -19,6 +19,8 @@ import ListFollowing from "./pages/ListFollowing/ListFollowing";
 import Noti from "./pages/Notification/Noti";
 import AllPosts from "./pages/AllPosts/AllPosts";
 import { SocketProvider } from "./context/SocketContext";
+import { CountMessProvider } from "./context/CountMess";
+import { CountNotiProvider } from "./context/CountNotiContext";
 
 function App() {
   const Layout = () => {
@@ -100,9 +102,13 @@ function App() {
       <UserProvider>
         <SocketProvider>
           <PostProvider>
-            {/* <React.StrictMode> */}
-            <RouterProvider router={router} />
-            {/* </React.StrictMode> */}
+            <CountNotiProvider>
+              <CountMessProvider>
+                {/* <React.StrictMode> */}
+                <RouterProvider router={router} />
+                {/* </React.StrictMode> */}
+              </CountMessProvider>
+            </CountNotiProvider>
           </PostProvider>
         </SocketProvider>
       </UserProvider>

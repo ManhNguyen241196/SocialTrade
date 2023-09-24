@@ -19,6 +19,8 @@ import ListNoti from "../listNoti/ListNoti";
 
 //module function noti
 import fetchNoti from "../../method/createNoti";
+import { CountMessContext } from "../../context/CountMess";
+import { CountNotiContext } from "../../context/CountNotiContext";
 
 export default function TopBar() {
   const { currentAvata, currentUser, addUser } = useContext(UserContext);
@@ -36,6 +38,13 @@ export default function TopBar() {
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
+  const { currCount, addCount } = useContext(CountMessContext);
+  const {
+    loadCountNoti,
+    currCountNoti,
+    loadCountNoti_follow,
+    currCountNoti_follow,
+  } = useContext(CountNotiContext);
   //fetch data
   function RenderData(arrays) {
     const renderArr = arrays.map((item) => {
@@ -85,11 +94,54 @@ export default function TopBar() {
     </div>
   );
 
+  const CountIsNotRead_Noti = async (type, typeCount) => {
+    const queryNoti = {
+      limitNoti: "all",
+      typeNoti: type,
+      isRead: "unread",
+    };
+    try {
+      const res = await axios.get(
+        `http://localhost:8800/api/notification?limit=${queryNoti.limitNoti}&typeNoti=${queryNoti.typeNoti}&curUser=${currentUser}&isRead=${queryNoti.isRead}`
+      );
+
+      if (res) {
+        typeCount(res.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    CountIsNotRead_Noti("notFollow", loadCountNoti);
+    CountIsNotRead_Noti("follow", loadCountNoti_follow);
+  }, [currentUser]);
+
+  const CountIsNotRead_mess = async (idConver, userConver) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8800/api/message/lastMessage/${idConver}?userId=${userConver}`
+      );
+      if (response.data.length > 0) {
+        //Count so mess is not read
+        addCount(response.data.length);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  useEffect(() => {
+    if (dataUser) {
+      dataUser.map((item) => {
+        return CountIsNotRead_mess(item.idConver, item.userConver);
+      });
+    }
+  }, [dataUser]);
   //------------------------------------------------------------------
   //fetch data noti not follow
   useEffect(() => {
     fetchNoti("all", "notFollow", currentUser, setDataNoti);
-  }, [clickNoti]);
+  }, [clickNoti, currentUser]);
 
   const handleClickNoti = () => {
     setClickNoti(!clickNoti);
@@ -173,6 +225,19 @@ export default function TopBar() {
     </div>
   );
 
+  //---------------------fetch count Số mess chưa được đọc
+  //  useEffect(()=>{
+  //   try {
+  //     const result = await axios.put(
+  //       "http://localhost:8800/api/notification/isRead?id=" + dataNoti._id
+  //     );
+  //     console.log(result.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //  },[currentUser])
+  //-----------------------------------------------------
+
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
@@ -211,21 +276,21 @@ export default function TopBar() {
           >
             <div className="topbarIconItem" onClick={handleClickNoti_notFollow}>
               <UsergroupAddOutlined />
-              <span className="topbarIconBadge">1</span>
+              <span className="topbarIconBadge">{currCountNoti_follow}</span>
             </div>
           </Popover>
           {/* popup MESSAGE */}
           <Popover content={content} title="Message" trigger="click">
             <div className="topbarIconItem">
               <WechatOutlined />
-              <span className="topbarIconBadge">2</span>
+              <span className="topbarIconBadge">{currCount}</span>
             </div>
           </Popover>
           {/* popup NOTI NOT FOLLOW */}
           <Popover content={contentNoti} title="Notification" trigger="click">
             <div className="topbarIconItem" onClick={handleClickNoti}>
               <BellFilled />
-              <span className="topbarIconBadge">1</span>
+              <span className="topbarIconBadge">{currCountNoti}</span>
             </div>
           </Popover>
         </div>

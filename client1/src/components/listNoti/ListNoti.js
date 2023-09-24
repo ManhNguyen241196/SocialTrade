@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./listNoti.css";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -7,12 +7,15 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import { Modal, Popover } from "antd";
 import Post from "../post/Posts";
 import { useNavigate } from "react-router-dom";
+import { CountNotiContext } from "../../context/CountNotiContext";
 
 const ListNoti = ({ dataNoti, ChangeCurData, DeleteCurData }) => {
   const [visible, setVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dataPost, setDataPost] = useState(null);
 
+  const { subtractionCountNoti, subtractionCountNoti_follow } =
+    useContext(CountNotiContext);
   const navigate = useNavigate();
   //fetch profile User
   async function fetchingProfile() {
@@ -75,6 +78,11 @@ const ListNoti = ({ dataNoti, ChangeCurData, DeleteCurData }) => {
         "http://localhost:8800/api/notification/isRead?id=" + dataNoti._id
       );
       console.log(result.data);
+      if (dataNoti.notificationType === "follow") {
+        subtractionCountNoti_follow(1);
+      } else {
+        subtractionCountNoti(1);
+      }
     } catch (error) {
       console.log(error);
     }

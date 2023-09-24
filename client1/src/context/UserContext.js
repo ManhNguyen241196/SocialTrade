@@ -13,6 +13,7 @@ export const UserProvider = ({ children }) => {
   );
 
   const [currentAvata, setCurrentAvata] = useState(null);
+  const [currentName, setCurrentName] = useState(null);
 
   const addUser = (newUser) => {
     localStorage.setItem("userId", JSON.stringify(newUser));
@@ -33,6 +34,7 @@ export const UserProvider = ({ children }) => {
         "http://localhost:8800/api/profile?userID=" + currentUser
       );
       setCurrentAvata(result.data[0].imageAvata);
+      setCurrentName(result.data[0].name);
     } catch (error) {
       console.log(error);
     }
@@ -53,6 +55,7 @@ export const UserProvider = ({ children }) => {
         currentToken,
         currentAvata,
         fetchAvata,
+        currentName,
       }}
     >
       {children}

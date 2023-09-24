@@ -3,12 +3,21 @@ import "./rightbar.css";
 import { SocketContext } from "../../context/SocketContext";
 import { UserContext } from "../../context/UserContext";
 import { io } from "socket.io-client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CountMessContext } from "../../context/CountMess";
+import { CountNotiContext } from "../../context/CountNotiContext";
 export default function Rightbar({ user }) {
   const { socket, addSocket } = useContext(SocketContext);
   const { currentUser } = useContext(UserContext);
 
-  // const [socket, setSocket] = useState(null);
+  const [differentData, setDifferentData] = useState(null);
+
   const [connectSocket, setConnectSocket] = useState(false);
+
+  //add count newmess
+  const { addCount } = useContext(CountMessContext);
+  const { addCountNoti, addCountNoti_follow } = useContext(CountNotiContext);
 
   /// socket IO
   useEffect(() => {
@@ -26,19 +35,6 @@ export default function Rightbar({ user }) {
     }
   }, [socket, currentUser]);
 
-  // console.log("socket in ra rightbar la:  ", socket);
-
-  const testIo = () => {
-    if (socket) {
-      socket.on("sendId", (arg1) => {
-        console.log("useronline là:   ", arg1);
-      });
-    }
-  };
-
-  const clickTestIo = () => {
-    socket.emit("clickTest", { name: currentUser });
-  };
   //----------------------
 
   const HomeRightbar = () => {
@@ -61,13 +57,64 @@ export default function Rightbar({ user }) {
     );
   };
 
+  //send noti message
+  const notify = () => toast(`noi dung notify`);
+
+  useEffect(() => {
+    if (socket) {
+      console.log("nhan thong bao 1 lan");
+      socket.on("sendMessageServer_notyfi", (dataMessSocket_notify) => {
+        if (dataMessSocket_notify && dataMessSocket_notify !== differentData) {
+          addCount(1);
+          toast(
+            <p>
+              <b>{dataMessSocket_notify}</b> da gui cho ban 1 mess
+            </p>
+          );
+          setDifferentData(dataMessSocket_notify);
+        }
+      });
+
+      socket.on("sendNotiServer_notify", (dataNotiServer_notify) => {
+        if (dataNotiServer_notify) {
+          const { typeSend, senderUserName } = dataNotiServer_notify;
+
+          if (typeSend !== "follow") {
+            addCountNoti(1);
+            toast(
+              <p>
+                <b>{senderUserName}</b> da <b>{typeSend}</b> bai viet cua ban
+              </p>
+            );
+          } else {
+            addCountNoti_follow(1);
+            toast(
+              <p>
+                <b>{senderUserName}</b> da <b>{typeSend}</b> bai viet cua ban
+              </p>
+            );
+          }
+        }
+      });
+    }
+  }, [socket]);
+  //show noti khi co mess
+
   return (
     <div className="rightbar">
-      <button className="clickBtnTest" onClick={clickTestIo}>
-        {" "}
-        Click test IO{" "}
-      </button>
-      {testIo()}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        limit={8}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="rightbarWrapper">
         <HomeRightbar />
       </div>

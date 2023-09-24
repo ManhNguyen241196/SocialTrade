@@ -5,14 +5,18 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 import { Modal, message } from "antd";
 import ProfileEdit from "../../components/profile/ProfileEdit";
+import { SocketContext } from "../../context/SocketContext";
+import CreateNewNoti from "../../method/createNewNoti";
 
 const InforUser = ({ userId }) => {
-  const { currentUser, fetchAvata } = useContext(UserContext);
+  const { currentUser, fetchAvata, currentName } = useContext(UserContext);
   const [name, setName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stateSubmit, setStateSubmit] = useState(false);
 
   const [follow, setFollow] = useState(false);
+
+  const { socket } = useContext(SocketContext);
 
   const queryClient = useQueryClient();
 
@@ -96,7 +100,19 @@ const InforUser = ({ userId }) => {
         "http://localhost:8800/api/follow?userId=" + userId,
         { userFollow: currentUser }
       );
-      message.success(`Bạn đã follow thành công ${name}`, 1);
+
+      if (response) {
+        const res = CreateNewNoti("follow", currentUser, userId);
+        if (socket) {
+          socket.emit("getNotiClient", {
+            currUser: currentUser,
+            currUser_name: currentName,
+            otherUser: userId,
+            type: "follow",
+          });
+        }
+        message.success(`Bạn đã follow thành công ${name}`, 1);
+      }
     } catch (error) {
       console.log(error.message);
     }

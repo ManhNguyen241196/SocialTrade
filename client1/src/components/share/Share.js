@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { message } from "antd";
 import EmojiPicker from "emoji-picker-react";
 import { UserContext } from "../../context/UserContext";
-import createNewNoti from "../../method/createNewNoti";
+import CreateNewNoti from "../../method/createNewNoti";
 
 export default function Share() {
   const [emojiShow, setEmojiShow] = useState(false);
@@ -35,7 +35,7 @@ export default function Share() {
   const sendNotiNewPost = (postId) => {
     if (followers.length > 0) {
       followers.map((follower) => {
-        return createNewNoti("post", currentUser, follower, postId);
+        return CreateNewNoti("post", currentUser, follower, postId);
       });
     }
   };

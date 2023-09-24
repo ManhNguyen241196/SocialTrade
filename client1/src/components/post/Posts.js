@@ -7,12 +7,12 @@ import { UserContext } from "../../context/UserContext";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import Comments from "../comment/Comment.js";
 import MorePost from "../morePost/MorePost";
-import createNewNoti from "../../method/createNewNoti";
+import CreateNewNoti from "../../method/createNewNoti";
+import { SocketContext } from "../../context/SocketContext";
 
 export default function Post({ post }) {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, currentName } = useContext(UserContext);
 
-  const [userPost, setUserPost] = useState(null);
   const [imgPost, setImgPost] = useState(null);
   const [userAvata, setUserAvata] = useState(null);
   const [userName, setUserName] = useState(null);
@@ -25,6 +25,9 @@ export default function Post({ post }) {
   const [arrCor, setArrCor] = useState([]);
 
   const queryClient = useQueryClient();
+
+  //socket IO
+  const { socket } = useContext(SocketContext);
 
   //refetch page
   useEffect(() => {
@@ -119,30 +122,24 @@ export default function Post({ post }) {
     }
   };
 
-  //notification like area
-  const fetchLikeNoti = async (type) => {
-    let data = {
-      senderId: currentUser,
-      receiverId: post.user,
-      postId: post._id,
-    };
-    try {
-      let res = await axios.post(
-        "http://localhost:8800/api/notification?notiType=" + type,
-        data
-      );
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   //like button
   const likeHandle = () => {
     setLikeState(true);
     fetchLikePost();
     if (post.user !== currentUser) {
-      createNewNoti("like", currentUser, post.user, post._id);
+      const res = CreateNewNoti("like", currentUser, post.user, post._id);
+
+      //send socket tới
+      if (res) {
+        if (socket) {
+          socket.emit("getNotiClient", {
+            currUser: currentUser,
+            currUser_name: currentName,
+            otherUser: post.user,
+            type: "like",
+          });
+        }
+      }
     }
   };
 
@@ -176,7 +173,15 @@ export default function Post({ post }) {
         <div className="postTop">
           <div className="postTopLeft">
             <Link to={`/profile/${post?.user}`}>
-              <img className="postProfileImg" src={userAvata} alt="" />
+              <img
+                className="postProfileImg"
+                src={
+                  userAvata
+                    ? userAvata
+                    : "https://d2w9rnfcy7mm78.cloudfront.net/8040974/original_ff4f1f43d7b72cc31d2eb5b0827ff1ac.png?1595022778?bc=0"
+                }
+                alt=""
+              />
             </Link>
             <span className="postUsername">{userName}</span>
             <span className="postDate">{postDate} </span>
@@ -232,7 +237,7 @@ export default function Post({ post }) {
           <Comments
             postUser={post.user}
             postId={post._id}
-            fetchCmtNoti={createNewNoti}
+            fetchCmtNoti={CreateNewNoti}
           />
         </div>
       )}

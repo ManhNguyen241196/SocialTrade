@@ -1,12 +1,13 @@
 import { useState } from "react";
 import "./leftbar.css";
-// import { Users } from "../../dummyData";
-// import CloseFriend from "../closeFriend/CloseFriend";
-import { HomeFilled, MessageFilled } from "@ant-design/icons";
+
 import { Menu } from "antd";
 import SocialBar from "./socialBar/SocialBar";
 import { useNavigate } from "react-router-dom";
 import Weather from "../weatherApp/Weather";
+import axios from "axios";
+import { UserContext } from "../../context/UserContext";
+import { CountNotiContext } from "../../context/CountNotiContext";
 
 // khia bao item cho menu
 const items = [

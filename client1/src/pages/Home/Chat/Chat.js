@@ -8,11 +8,11 @@ import ListConversation from "../../../components/listConvarsation/ListConversat
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { SocketContext } from "../../../context/SocketContext";
-
 const Chat = () => {
   const [dataUser, setDataUser] = useState("");
   const [textMessage, setTextMessage] = useState("");
   const [objCurrentConver, setObjCurrentConver] = useState(null);
+  const [newMess, setNewMess] = useState(null);
 
   const { currentUser } = useContext(UserContext);
   const { socket } = useContext(SocketContext);
@@ -49,12 +49,14 @@ const Chat = () => {
     setTextMessage(e.target.value);
   };
 
+  //show thong bao
   const SendMessHandle = async () => {
     let formData = {
       conversationId: objCurrentConver.id,
       sender: currentUser,
       text: textMessage,
       reciever: objCurrentConver.otherUserName_Id,
+      nameOtherUser: objCurrentConver.otherUserName,
     };
 
     try {
@@ -63,12 +65,16 @@ const Chat = () => {
         formData
       );
 
-      //------Socket IO ----------
-      if (socket) {
-        socket.emit("getMessageClient", formData);
-      }
-
       if (res) {
+        //------Socket IO ----------
+        if (socket) {
+          socket.emit("getMessageClient", formData);
+        }
+        setNewMess({
+          ...formData,
+          isRead: true,
+          createdAt: Date.now(),
+        });
         setTextMessage("");
       }
     } catch (error) {
@@ -76,7 +82,7 @@ const Chat = () => {
     }
   };
 
-  //click handle
+  //click handle tạo hiệu ứng bôi đoạn hội thoại dk chọn
   const UlHandleClick = (e) => {
     const parent = e.target.parentElement;
     parent.childNodes.forEach((element) => {
@@ -85,6 +91,7 @@ const Chat = () => {
 
     e.target.classList.add("activeClick");
   };
+
   return (
     <>
       <div className="container">
@@ -131,7 +138,11 @@ const Chat = () => {
                       </span>
                     </div>
 
-                    <Message objCurrentConver={objCurrentConver} />
+                    <Message
+                      objCurrentConver={objCurrentConver}
+                      newMessYou={newMess}
+                    />
+
                     <div className="chat-message clearfix">
                       <Space direction="vertical" className="spaceInput">
                         <Space.Compact
