@@ -7,10 +7,9 @@ const router = express.Router();
 
 //id cura user ví dụ. Sau này chỗ này sẽ  là id user mà từ client gửi về
 let userIdDummy = "64a14eef1e193f574e9c64e5";
-let postIdDummy = "64b3e63cee91c72de02e43b8";
 
 router.get("/", checkVerify, async (req, res, next) => {
-  console.log(req.userId);
+  console.log("home: ", req.userId);
   userIdDummy = req.userId;
   try {
     // tìm tất cả các following của current user
@@ -39,6 +38,25 @@ router.get("/", checkVerify, async (req, res, next) => {
     });
   } catch (error) {
     return res.status(400).json(error.message);
+  }
+});
+
+// get all post of all user
+// router.get("/all", checkVerify, async (req, res, next) => {
+router.get("/all", checkVerify, async (req, res, next) => {
+  console.log("allPost: ", req.userId);
+  try {
+    let fetchPost = await Post.find()
+      .sort({ createdAt: -1 }) //sort từ cu tới moi [ cux nhất ,...moi1,...moiNhat]
+      .limit(10);
+    res.status(200).json({
+      dataPost: {
+        followers: fetchPost,
+        user: req.userId,
+      },
+    });
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 
@@ -114,4 +132,12 @@ router.get("/userId", async (req, res, next) => {
   }
 });
 
+router.get("/userId/detail", async (req, res, next) => {
+  try {
+    const data = await Post.find({ _id: req.query.postId });
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+});
 export default router;

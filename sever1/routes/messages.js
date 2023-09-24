@@ -79,7 +79,7 @@ router.put("/changeState/:conversationId", async (req, res) => {
         },
       }
     );
-    res.status(200).json("State isRead doi thanh cong");
+    res.status(200).json(trueIsRead.modifiedCount);
   } catch (error) {
     res.status(500).json(error.message);
   }

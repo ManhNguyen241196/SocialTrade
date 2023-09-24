@@ -10,6 +10,7 @@ import routerFollow from "./routes/follow.js";
 import routerSearch from "./routes/search.js";
 import routerConversation from "./routes/conversations.js";
 import routerMessage from "./routes/messages.js";
+import routerNoti from "./routes/notification.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -54,6 +55,7 @@ app.use("/api/follow", routerFollow);
 app.use("/api/conversation", routerConversation);
 app.use("/api/message", routerMessage);
 app.use("/api/search", routerSearch);
+app.use("/api/notification", routerNoti);
 
 routerUser;
 
