@@ -56,6 +56,7 @@ io.on("connection", (socket) => {
       reciever: dataClient.reciever,
       isRead: true,
       createdAt: Date.now(),
+      senderName: dataClient.nameOtherUser,
     };
     console.log(messStore);
     /*
@@ -63,6 +64,22 @@ io.on("connection", (socket) => {
     */
     let otherUser = getUser(messStore.reciever);
     socket.to(otherUser.socketId).emit("sendMessageServer", messStore);
+    // tao notify an hien
+    socket
+      .to(otherUser.socketId)
+      .emit("sendMessageServer_notyfi", messStore.senderName);
+  });
+
+  // send notify cho like, cmt, follow
+  socket.on("getNotiClient", (dataNotiClient) => {
+    console.log(dataNotiClient);
+    let otherUser = getUser(dataNotiClient.otherUser);
+
+    socket.to(otherUser.socketId).emit("sendNotiServer_notify", {
+      senderUser: dataNotiClient.currUser,
+      senderUserName: dataNotiClient.currUser_name,
+      typeSend: dataNotiClient.type,
+    });
   });
 
   socket.on("clickTest", ({ name }) => {
