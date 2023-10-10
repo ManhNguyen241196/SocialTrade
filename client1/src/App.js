@@ -21,6 +21,8 @@ import AllPosts from "./pages/AllPosts/AllPosts";
 import { SocketProvider } from "./context/SocketContext";
 import { CountMessProvider } from "./context/CountMess";
 import { CountNotiProvider } from "./context/CountNotiContext";
+import { SymbolProvider } from "./components/rightbar/context/AllSymbolContext";
+import { WatchListProvider } from "./components/rightbar/context/WatchListSymbolContext";
 
 function App() {
   const Layout = () => {
@@ -104,9 +106,14 @@ function App() {
           <PostProvider>
             <CountNotiProvider>
               <CountMessProvider>
-                {/* <React.StrictMode> */}
-                <RouterProvider router={router} />
-                {/* </React.StrictMode> */}
+                {/* chart rightbar */}
+                <SymbolProvider>
+                  <WatchListProvider>
+                    {/* <React.StrictMode> */}
+                    <RouterProvider router={router} />
+                    {/* </React.StrictMode> */}
+                  </WatchListProvider>
+                </SymbolProvider>
               </CountMessProvider>
             </CountNotiProvider>
           </PostProvider>
