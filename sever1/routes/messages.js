@@ -5,7 +5,7 @@ const router = express.Router();
 // create a newMessage
 router.post("/", async (req, res) => {
   try {
-    const newMessage = await new Message(req.body);
+    const newMessage = new Message(req.body);
     await newMessage.save();
     res.status(200).json("create a message thanh cong ");
   } catch (error) {
