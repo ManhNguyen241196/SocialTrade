@@ -14,7 +14,7 @@ const Chat = () => {
   const [objCurrentConver, setObjCurrentConver] = useState(null);
   const [newMess, setNewMess] = useState(null);
 
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, currentName } = useContext(UserContext);
   const { socket } = useContext(SocketContext);
 
   const onSearch = (value) => console.log(value);
@@ -56,7 +56,7 @@ const Chat = () => {
       sender: currentUser,
       text: textMessage,
       reciever: objCurrentConver.otherUserName_Id,
-      nameOtherUser: objCurrentConver.otherUserName,
+      nameOtherUser: currentName,
     };
 
     try {

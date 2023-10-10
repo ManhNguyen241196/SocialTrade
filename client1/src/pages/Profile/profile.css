@@ -103,7 +103,7 @@
     font-weight: bolder;
 }
 
-button {
+.profileContainer button {
     border: none;
     background-color: #5271ff;
     color: white;

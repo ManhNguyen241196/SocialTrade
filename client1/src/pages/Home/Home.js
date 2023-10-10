@@ -62,7 +62,7 @@ const Home = () => {
     <>
       {currentUser ? (
         <div className="home">
-          <button onClick={handleLogout}>logout</button> <h2>{currentUser}</h2>
+          {/* <button onClick={handleLogout}>logout</button> <h2>{currentUser}</h2> */}
           <Share />
           <Feed posts={currentPost} />
         </div>
