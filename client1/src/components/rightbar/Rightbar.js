@@ -7,6 +7,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CountMessContext } from "../../context/CountMess";
 import { CountNotiContext } from "../../context/CountNotiContext";
+import TradingView from "./components/page/Right/TradingView/TradingView";
+import Market from "./components/page/Right/Market/Market";
+import WatchList from "./components/page/Right/WatchList/WatchList";
 export default function Rightbar({ user }) {
   const { socket, addSocket } = useContext(SocketContext);
   const { currentUser } = useContext(UserContext);
@@ -115,8 +118,11 @@ export default function Rightbar({ user }) {
         pauseOnHover
         theme="light"
       />
-      <div className="rightbarWrapper">
-        <HomeRightbar />
+      <div className="rightbarWrapper container_body">
+        {/* <HomeRightbar /> */}
+        <TradingView />
+        <Market />
+        <WatchList />
       </div>
     </div>
   );

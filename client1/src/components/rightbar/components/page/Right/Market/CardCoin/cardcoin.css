@@ -1,0 +1,53 @@
+.container_card {
+    padding: 5px;
+    background-color: white;
+}
+
+.container_card .col {
+    /* background-color: rgb(187, 185, 58); */
+    height: 50px;
+    padding: 2px;
+}
+
+.sourceData {
+    font-size: 12px;
+}
+
+.container_card-symbol {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    justify-content: space-around;
+}
+
+.container_card-symbol .title {
+    font-weight: bolder;
+}
+
+.container_card-symbol .sourceData {
+    color: rgb(78, 78, 78);
+}
+
+
+.container_card-price,
+.container_card-chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.container_card-price {
+    font-weight: bolder;
+}
+
+.container_card-price .price_raito {
+    font-size: 13px;
+}
+
+.container_card-price .price_raito.down {
+    color: red
+}
+
+.container_card-price .price_raito.up {
+    color: rgb(0, 170, 0);
+}

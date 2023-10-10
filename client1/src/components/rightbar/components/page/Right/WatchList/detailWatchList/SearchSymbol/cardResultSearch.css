@@ -1,0 +1,17 @@
+.container_cardSearch {
+    display: flex;
+    width: 300px;
+
+}
+
+.cardSearch_title {
+    flex: 5;
+}
+
+.cardSearch_price {
+    flex: 1.5;
+}
+
+.cardSearch_change {
+    flex: 1.5;
+}

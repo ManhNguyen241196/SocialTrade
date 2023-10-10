@@ -1,0 +1,12 @@
+.container_market {
+    border: 1px solid #e0e3eb;
+}
+
+.container_market header {
+    font-weight: bolder;
+}
+
+.body_tool {
+    display: flex;
+    justify-content: right;
+}

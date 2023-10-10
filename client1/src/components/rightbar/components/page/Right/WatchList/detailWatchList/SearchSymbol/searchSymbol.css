@@ -1,0 +1,7 @@
+.listItem {
+    width: 400px;
+}
+
+#btnAdd:hover {
+    cursor: pointer;
+}
